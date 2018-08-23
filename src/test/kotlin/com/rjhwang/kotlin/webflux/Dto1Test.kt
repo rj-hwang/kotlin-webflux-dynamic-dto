@@ -4,6 +4,7 @@ import cn.gftaxi.webflux.dynamicdto.GetDto1Handler
 import cn.gftaxi.webflux.dynamicdto.PatchDto1Handler
 import com.rjhwang.kotlin.webflux.Utils.DEFAULT_DTO1
 import com.rjhwang.kotlin.webflux.Utils.LOCAL_DATE_PATTERN
+import com.rjhwang.kotlin.webflux.Utils.OFFSET_DATE_TIME_PATTERN
 import com.rjhwang.kotlin.webflux.dto1.Dto1
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,14 +32,17 @@ class Dto1Test @Autowired constructor(
 ) {
   private val path = "/"
   private val localDate = DEFAULT_DTO1.localDate!!.format(DateTimeFormatter.ofPattern(LOCAL_DATE_PATTERN))
+  private val offsetDateTime = DEFAULT_DTO1.offsetDateTime!!.format(DateTimeFormatter.ofPattern(OFFSET_DATE_TIME_PATTERN))
 
   @Test
   fun patch() {
     val client = bindToRouterFunction(route(PATCH(path), patchHandler)).build()
-    val json = """{
+    val json = """
+      {
         "name": "${DEFAULT_DTO1.name}",
         "decimal": ${DEFAULT_DTO1.decimal},
-        "localDate": "$localDate"
+        "localDate": "$localDate",
+        "offsetDateTime": "$offsetDateTime"
       }""".trimIndent()
 
     client.patch().uri(path)
@@ -52,6 +56,7 @@ class Dto1Test @Autowired constructor(
       .jsonPath("$.decimal").isEqualTo(DEFAULT_DTO1.decimal!!)
       // By Dto/@set:DateTimeFormat
       .jsonPath("$.localDate").isEqualTo(localDate)
+      .jsonPath("$.offsetDateTime").isEqualTo(offsetDateTime)
   }
 
   @Test
@@ -67,5 +72,7 @@ class Dto1Test @Autowired constructor(
       .jsonPath("$.decimal").isEqualTo(DEFAULT_DTO1.decimal!!)
       // By Dto/@get:JsonFormat
       .jsonPath("$.localDate").isEqualTo(localDate)
+      .jsonPath("$.offsetDateTime").isEqualTo(offsetDateTime)
+      .consumeWith { println(String(it.responseBody!!)) }
   }
 }
