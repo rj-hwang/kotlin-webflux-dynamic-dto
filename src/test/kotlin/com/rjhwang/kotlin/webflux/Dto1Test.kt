@@ -1,6 +1,7 @@
 package com.rjhwang.kotlin.webflux
 
 import cn.gftaxi.webflux.dynamicdto.GetDto1Handler
+import cn.gftaxi.webflux.dynamicdto.LocalJavaTimeConfiguration
 import cn.gftaxi.webflux.dynamicdto.PatchDto1Handler
 import com.rjhwang.kotlin.webflux.Utils.DEFAULT_DTO1
 import com.rjhwang.kotlin.webflux.Utils.LOCAL_DATE_PATTERN
@@ -8,6 +9,7 @@ import com.rjhwang.kotlin.webflux.Utils.OFFSET_DATE_TIME_PATTERN
 import com.rjhwang.kotlin.webflux.dto1.Dto1
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
 import org.springframework.http.MediaType.APPLICATION_JSON_UTF8
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig
 import org.springframework.test.web.reactive.server.WebTestClient.bindToRouterFunction
@@ -24,7 +26,8 @@ import java.time.format.DateTimeFormatter
  *
  * @author RJ
  */
-@SpringJUnitConfig(PatchDto1Handler::class, GetDto1Handler::class)
+@SpringJUnitConfig(PatchDto1Handler::class, GetDto1Handler::class, LocalJavaTimeConfiguration::class,
+  JacksonAutoConfiguration::class)
 @EnableWebFlux
 class Dto1Test @Autowired constructor(
   private val patchHandler: PatchDto1Handler,

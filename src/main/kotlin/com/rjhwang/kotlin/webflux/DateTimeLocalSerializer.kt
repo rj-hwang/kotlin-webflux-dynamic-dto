@@ -17,12 +17,20 @@ import kotlin.reflect.KClass
  * @author RJ
  */
 class DateTimeLocalSerializer : ContextualSerializer, JsonSerializer<TemporalAccessor>() {
+  companion object {
+    val INSTANCE = DateTimeLocalSerializer()
+  }
+
   private lateinit var pattern: String
   private lateinit var targetClass: KClass<TemporalAccessor>
   override fun createContextual(provider: SerializerProvider, property: BeanProperty): JsonSerializer<*> {
     pattern = property.getAnnotation(JsonFormat::class.java)?.pattern ?: ""
     targetClass = property.type.rawClass.kotlin as KClass<TemporalAccessor>
     return this
+  }
+
+  override fun handledType(): Class<TemporalAccessor> {
+    return TemporalAccessor::class.java
   }
 
   override fun serialize(value: TemporalAccessor?, generator: JsonGenerator, provider: SerializerProvider) {

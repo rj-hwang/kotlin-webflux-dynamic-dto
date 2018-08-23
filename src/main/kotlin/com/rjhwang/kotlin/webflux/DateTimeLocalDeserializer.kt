@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.BeanProperty
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonDeserializer
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer
+import com.fasterxml.jackson.databind.jsontype.TypeDeserializer
 import com.rjhwang.kotlin.webflux.DateTimeLocalFormatterUtils.LOCAL_OFFSET
 import com.rjhwang.kotlin.webflux.DateTimeLocalFormatterUtils.getFormatter
 import java.lang.UnsupportedOperationException
@@ -17,6 +18,10 @@ import kotlin.reflect.KClass
  * @author RJ
  */
 class DateTimeLocalDeserializer : ContextualDeserializer, JsonDeserializer<TemporalAccessor>() {
+  companion object {
+    val INSTANCE = DateTimeLocalDeserializer()
+  }
+
   private lateinit var pattern: String
   private lateinit var targetClass: KClass<TemporalAccessor>
 
@@ -26,8 +31,21 @@ class DateTimeLocalDeserializer : ContextualDeserializer, JsonDeserializer<Tempo
     return this
   }
 
+  override fun deserializeWithType(p: JsonParser?, ctxt: DeserializationContext?, typeDeserializer: TypeDeserializer?): Any {
+    return super.deserializeWithType(p, ctxt, typeDeserializer)
+  }
+
+  override fun deserialize(p: JsonParser?, ctxt: DeserializationContext?, intoValue: TemporalAccessor?): TemporalAccessor {
+    return super.deserialize(p, ctxt, intoValue)
+  }
+
+  override fun handledType(): Class<*> {
+    return TemporalAccessor::class.java
+  }
+
   override fun deserialize(parser: JsonParser, context: DeserializationContext): TemporalAccessor {
     val value = parser.text
+    println("context=${context::class}")
     return when (targetClass) {
       LocalDateTime::class -> LocalDateTime.parse(value, getFormatter(pattern, targetClass))
       LocalDate::class -> LocalDate.parse(value, getFormatter(pattern, targetClass))

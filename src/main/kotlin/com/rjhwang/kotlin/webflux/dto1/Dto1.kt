@@ -37,13 +37,16 @@ class Dto1 {
   var notSet: String? by map
   var name: String? by map
   var decimal: BigDecimal? by map
-  @get:JsonFormat(pattern = LOCAL_DATE_PATTERN)
-  @set:DateTimeFormat(pattern = LOCAL_DATE_PATTERN)
+  //@get:JsonFormat(pattern = LOCAL_DATE_PATTERN)
+  //@set:DateTimeFormat(pattern = LOCAL_DATE_PATTERN)
+  //@set:JsonSerialize(using = DateTimeLocalSerializer::class)
+  //@set:JsonDeserialize(using = DateTimeLocalDeserializer::class)
   var localDate: LocalDate?  by map
   //@get:JsonFormat(pattern = OFFSET_DATE_TIME_PATTERN)
   //@set:DateTimeFormat(pattern = OFFSET_DATE_TIME_PATTERN)
-  @set:JsonSerialize(using = DateTimeLocalSerializer::class)
-  @set:JsonDeserialize(using = DateTimeLocalDeserializer::class)
+  //@set:JsonSerialize(using = DateTimeLocalSerializer::class)
+  //@set:JsonDeserialize(using = DateTimeLocalDeserializer::class)
+  @get:JsonIgnore
   var offsetDateTime: OffsetDateTime?  by map
 
   override fun toString(): String {
