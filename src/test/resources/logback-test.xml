@@ -4,5 +4,5 @@
   <!-- trace < debug < info < warn < error -->
   <root level="warn"/>
 
-  <logger name="com.rjhwang" level="warn"/>
+  <logger name="com.rjhwang" level="debug"/>
 </configuration>

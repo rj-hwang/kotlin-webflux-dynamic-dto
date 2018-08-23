@@ -2,7 +2,7 @@ package cn.gftaxi.webflux.dynamicdto
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.rjhwang.kotlin.webflux.LocalJavaTimeModule
+import com.rjhwang.kotlin.webflux.javatime.LocalJavaTimeModule
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -30,14 +30,14 @@ class LocalJavaTimeConfiguration {
     return Jackson2ObjectMapperBuilderCustomizer {
       it.serializationInclusion(Include.NON_EMPTY)
       it.failOnUnknownProperties(true)
-//      it.deserializerByType(LocalDate::class.java, DateTimeLocalDeserializer.INSTANCE)
-//      it.deserializerByType(LocalDateTime::class.java, DateTimeLocalDeserializer.INSTANCE)
-//      it.deserializerByType(OffsetDateTime::class.java, DateTimeLocalDeserializer.INSTANCE)
-//      it.deserializerByType(TemporalAccessor::class.java, DateTimeLocalDeserializer.INSTANCE)
+//      it.deserializerByType(LocalDate::class.java, JavaTimeDeserializer.INSTANCE)
+//      it.deserializerByType(LocalDateTime::class.java, JavaTimeDeserializer.INSTANCE)
+//      it.deserializerByType(OffsetDateTime::class.java, JavaTimeDeserializer.INSTANCE)
+//      it.deserializerByType(TemporalAccessor::class.java, JavaTimeDeserializer.INSTANCE)
 //      it.serializerByType(TemporalAccessor::class.java, DateTimeLocalSerializer())
       //it.propertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
 
-      //it.deserializers(DateTimeLocalDeserializer.INSTANCE)
+      //it.deserializers(JavaTimeDeserializer.INSTANCE)
       //it.serializers(DateTimeLocalSerializer.INSTANCE)
 
       //it.serializerByType(TemporalAccessor::class.java, DateTimeLocalSerializer.INSTANCE)

@@ -3,7 +3,7 @@ package com.rjhwang.kotlin.webflux
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.JsonDeserializer
-import com.rjhwang.kotlin.webflux.DateTimeLocalFormatterUtils.getFormatter
+import com.rjhwang.kotlin.webflux.javatime.JavaTimeUtils.getFormatter
 import java.time.LocalDate
 
 /**
@@ -19,6 +19,6 @@ class LocalDateDeserializer : JsonDeserializer<LocalDate>() {
   }
 
   override fun deserialize(parser: JsonParser, context: DeserializationContext): LocalDate {
-    return LocalDate.parse(parser.text, getFormatter("", LocalDate::class))
+    return LocalDate.parse(parser.text, getFormatter(LocalDate::class))
   }
 }

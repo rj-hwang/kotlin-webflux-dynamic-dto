@@ -73,6 +73,11 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-autoconfigure</artifactId>
     </dependency>
+    <!-- log -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
   </dependencies>
   <profiles>
     <profile>
@@ -103,11 +108,11 @@
           <artifactId>spring-boot-starter-json</artifactId>
           <scope>test</scope>
           <exclusions>
-            <!-- use -->
+            <!-- use
             <exclusion>
               <groupId>com.fasterxml.jackson.datatype</groupId>
               <artifactId>jackson-datatype-jsr310</artifactId>
-            </exclusion>
+            </exclusion> -->
           </exclusions>
         </dependency>
         <dependency>
@@ -147,6 +152,17 @@
         <dependency>
           <groupId>com.nhaarman</groupId>
           <artifactId>mockito-kotlin</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <!-- log -->
+        <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>jcl-over-slf4j</artifactId>
+          <scope>test</scope>
+        </dependency>
+        <dependency>
+          <groupId>ch.qos.logback</groupId>
+          <artifactId>logback-classic</artifactId>
           <scope>test</scope>
         </dependency>
       </dependencies>

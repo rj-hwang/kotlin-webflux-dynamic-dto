@@ -1,16 +1,9 @@
 package com.rjhwang.kotlin.webflux.dto1
 
-import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import com.fasterxml.jackson.databind.annotation.JsonSerialize
-import com.rjhwang.kotlin.webflux.DateTimeLocalDeserializer
-import com.rjhwang.kotlin.webflux.DateTimeLocalSerializer
-import com.rjhwang.kotlin.webflux.Utils.LOCAL_DATE_PATTERN
-import org.springframework.format.annotation.DateTimeFormat
 import java.math.BigDecimal
 import java.time.LocalDate
 import java.time.OffsetDateTime
@@ -40,12 +33,12 @@ class Dto1 {
   //@get:JsonFormat(pattern = LOCAL_DATE_PATTERN)
   //@set:DateTimeFormat(pattern = LOCAL_DATE_PATTERN)
   //@set:JsonSerialize(using = DateTimeLocalSerializer::class)
-  //@set:JsonDeserialize(using = DateTimeLocalDeserializer::class)
+  //@set:JsonDeserialize(using = JavaTimeDeserializer::class)
   var localDate: LocalDate?  by map
   //@get:JsonFormat(pattern = OFFSET_DATE_TIME_PATTERN)
   //@set:DateTimeFormat(pattern = OFFSET_DATE_TIME_PATTERN)
   //@set:JsonSerialize(using = DateTimeLocalSerializer::class)
-  //@set:JsonDeserialize(using = DateTimeLocalDeserializer::class)
+  //@set:JsonDeserialize(using = JavaTimeDeserializer::class)
   @get:JsonIgnore
   var offsetDateTime: OffsetDateTime?  by map
 

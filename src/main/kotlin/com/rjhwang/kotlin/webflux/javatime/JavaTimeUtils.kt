@@ -1,4 +1,4 @@
-package com.rjhwang.kotlin.webflux
+package com.rjhwang.kotlin.webflux.javatime
 
 import java.time.*
 import java.time.format.DateTimeFormatter
@@ -8,11 +8,11 @@ import kotlin.reflect.KClass
 /**
  * @author RJ
  */
-object DateTimeLocalFormatterUtils {
+object JavaTimeUtils {
   var LOCAL_OFFSET: ZoneOffset = OffsetDateTime.now().offset!!
   var LOCAL_DATE_PATTERN: String = "yyyy-MM-dd"
   var LOCAL_TIME_PATTERN: String = "HH:mm"
-  var LOCAL_DATE_TIME_PATTERN: String = "$LOCAL_DATE_PATTERN $LOCAL_TIME_PATTERN"
+  var LOCAL_DATE_TIME_PATTERN: String = "${LOCAL_DATE_PATTERN} ${LOCAL_TIME_PATTERN}"
   private const val DEFAULT_FORMATTER_KEY = "DEFAULT"
   private val CACHE_PATTERNS = mutableMapOf<String, DateTimeFormatter>(
     DEFAULT_FORMATTER_KEY to DateTimeFormatter.ISO_OFFSET_DATE_TIME
@@ -26,9 +26,9 @@ object DateTimeLocalFormatterUtils {
     ZonedDateTime::class to LOCAL_DATE_TIME_PATTERN
   )
 
-  fun <T : TemporalAccessor> getFormatter(pattern: String, targetClass: KClass<out T>): DateTimeFormatter {
+  fun <T : TemporalAccessor> getFormatter(clazz: KClass<out T>, pattern: String = ""): DateTimeFormatter {
     return if (pattern.isEmpty()) {
-      getFormatter(DEFAULT_LOCAL_PATTERNS[targetClass]!!, targetClass)
+      getFormatter(clazz = clazz, pattern = DEFAULT_LOCAL_PATTERNS[clazz]!!)
     } else {
       if (!CACHE_PATTERNS.containsKey(pattern)) CACHE_PATTERNS[pattern] = DateTimeFormatter.ofPattern(pattern)
       CACHE_PATTERNS[pattern]!!
