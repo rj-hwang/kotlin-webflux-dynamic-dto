@@ -5,46 +5,38 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY
+import com.rjhwang.kotlin.webflux.Utils.LOCAL_DATE_PATTERN
 import org.springframework.format.annotation.DateTimeFormat
+import java.math.BigDecimal
 import java.time.LocalDate
 
 /**
- * 动态 DTO 例子。
+ * Dynamic DTO example 1.
  *
- * 这个类使用了 Kotlin 的 [Delegated Properties](https://kotlinlang.org/docs/reference/delegated-properties.html) 中的
- * [Storing Properties in a Map](https://kotlinlang.org/docs/reference/delegated-properties.html#storing-properties-in-a-map) 技术
- * 将有设置过值的属性以键值对的形式保存在 [map] 属性中。
- * 这个主意来源于 StackOverflow [How to do PATCH properly in strongly typed languages based on Spring](https://stackoverflow.com/questions/36907723#answer-37010895)。
+ * Use Kotlin ['Delegated Properties'](https://kotlinlang.org/docs/reference/delegated-properties.html) and
+ * ['Storing Properties in a Map'](https://kotlinlang.org/docs/reference/delegated-properties.html#storing-properties-in-a-map)
+ * to store the changed properties in a [map].
  *
- * 特别注意类中的属性需要定义为非只读属性 `var` 而不是 `val`，并且全部属性需要定义为可空，且不要设置任何默认值。
+ * This idea comes from StackOverflow ['How to do PATCH properly in strongly typed languages based on Spring'](https://stackoverflow.com/questions/36907723#answer-37010895).
+ *
+ * > Notes: All properties need to be defined as `var` not `val`, and property is nullable and no default value setting.
  *
  * @author RJ
  */
 @JsonInclude(NON_EMPTY)
 @JsonIgnoreProperties(ignoreUnknown = true)
-class Dto1 constructor() {
+class Dto1 {
   @JsonIgnore
   private val map: MutableMap<String, Any?> = mutableMapOf<String, Any?>().withDefault { null }
 
-  constructor(name: String?, localDate: LocalDate?) : this() {
-    this.name = name
-    this.localDate = localDate
-  }
-
+  var notSet: String? by map
   var name: String? by map
-  var code: String? by map
-  @get:JsonFormat(pattern = "yyyy-MM-dd")
-  @set:DateTimeFormat(pattern = "yyyy-MM-dd")
+  var decimal: BigDecimal? by map
+  @get:JsonFormat(pattern = LOCAL_DATE_PATTERN)
+  @set:DateTimeFormat(pattern = LOCAL_DATE_PATTERN)
   var localDate: LocalDate?  by map
 
   override fun toString(): String {
     return "Dto1=$map"
-  }
-
-  companion object {
-    val DEFAULT = Dto1(
-      name = "simter",
-      localDate = LocalDate.of(2018, 1, 10)
-    )
   }
 }

@@ -17,7 +17,6 @@ import reactor.core.publisher.Mono
 @Component
 class PatchDto1Handler @Autowired constructor() : HandlerFunction<ServerResponse> {
   override fun handle(request: ServerRequest): Mono<ServerResponse> {
-    return request.bodyToMono<Dto1>()
-      .flatMap { ok().contentType(APPLICATION_JSON_UTF8).syncBody(it) }
+    return request.bodyToMono<Dto1>().flatMap { ok().contentType(APPLICATION_JSON_UTF8).syncBody(it) }
   }
 }
