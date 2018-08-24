@@ -1,15 +1,15 @@
 package com.rjhwang.kotlin.webflux.handler
 
 import cn.gftaxi.webflux.dynamicdto.GetHandler
-import cn.gftaxi.webflux.dynamicdto.JavaTimeConfiguration
 import com.rjhwang.kotlin.webflux.Dto
+import com.rjhwang.kotlin.webflux.ModuleConfiguration
 import org.junit.jupiter.api.Test
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
 import org.springframework.http.MediaType.APPLICATION_JSON_UTF8
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig
 import org.springframework.test.web.reactive.server.WebTestClient.bindToRouterFunction
-import org.springframework.web.reactive.config.EnableWebFlux
 import org.springframework.web.reactive.function.server.RequestPredicates.GET
 import org.springframework.web.reactive.function.server.RouterFunctions.route
 import java.time.format.DateTimeFormatter
@@ -21,11 +21,11 @@ import java.time.format.DateTimeFormatter
  *
  * @author RJ
  */
-@SpringJUnitConfig(GetHandler::class, JavaTimeConfiguration::class, JacksonAutoConfiguration::class)
-@EnableWebFlux
+@SpringJUnitConfig(GetHandler::class, ModuleConfiguration::class)
 class GetHandlerTest @Autowired constructor(
   private val getHandler: GetHandler
 ) {
+  private val logger: Logger = LoggerFactory.getLogger(GetHandlerTest::class.java)
   private val path = "/"
 
 //  @Test
@@ -64,6 +64,7 @@ class GetHandlerTest @Autowired constructor(
       .expectStatus().isOk
       .expectHeader().contentType(APPLICATION_JSON_UTF8)
       .expectBody()
+      .consumeWith { logger.debug(String(it.responseBody!!)) }
       .jsonPath("$.id").doesNotExist()
       //.jsonPath("$.name").doesNotExist()
       .jsonPath("$.localDateTime").isEqualTo(dateTime2minutes)
@@ -78,6 +79,6 @@ class GetHandlerTest @Autowired constructor(
       .jsonPath("$.year").isEqualTo(dateTime.year)
       .jsonPath("$.month").isEqualTo(dateTime.monthValue)
       .jsonPath("$.monthDay").isEqualTo(dateTime2minutes.substring(5, 10))
-      .consumeWith { println(String(it.responseBody!!)) }
+    //.consumeWith { logger.debug(String(it.responseBody!!)) }
   }
 }

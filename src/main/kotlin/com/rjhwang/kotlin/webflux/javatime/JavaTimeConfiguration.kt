@@ -3,12 +3,16 @@ package cn.gftaxi.webflux.dynamicdto
 import com.fasterxml.jackson.annotation.JsonInclude.Include
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.Module
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.rjhwang.kotlin.webflux.javatime.JavaTimeModule
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Primary
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder
+import org.springframework.web.reactive.config.WebFluxConfigurer
 
 /**
  * @author RJ
@@ -17,13 +21,25 @@ import org.springframework.context.annotation.Configuration
  */
 @Configuration
 class JavaTimeConfiguration {
-//  @Primary
-//  @Bean
-//  fun jacksonObjectMapper(builder: Jackson2ObjectMapperBuilder): ObjectMapper {
+  /**
+   * [JacksonAutoConfiguration.JacksonObjectMapperConfiguration.jacksonObjectMapper]
+   */
+  @Primary
+  @Bean
+  fun jacksonObjectMapper(builder: Jackson2ObjectMapperBuilder): ObjectMapper {
 //    val objectMapper = builder.createXmlMapper(false).build<ObjectMapper>()
 //    objectMapper.registerModule(JavaTimeModule())
 //    return objectMapper
-//  }
+
+    val mapper = ObjectMapper()
+    mapper.registerModule(JavaTimeModule())
+    mapper.setSerializationInclusion(Include.NON_EMPTY) // not serialize null and empty value
+    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+    mapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    mapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
+    return mapper
+  }
 
   /**
    * Register by method
@@ -39,6 +55,7 @@ class JavaTimeConfiguration {
    */
   @Bean
   fun customJackson(): Jackson2ObjectMapperBuilderCustomizer {
+   // WebFluxConfigurer
     return Jackson2ObjectMapperBuilderCustomizer {
       // not serialize null and empty value
       it.serializationInclusion(Include.NON_EMPTY)
@@ -53,4 +70,7 @@ class JavaTimeConfiguration {
       )
     }
   }
+
+  // org.springframework.boot.jackson.JsonComponentModule
+  // jackson-module-parameter-names
 }
