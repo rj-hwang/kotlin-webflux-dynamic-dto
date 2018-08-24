@@ -74,5 +74,9 @@ class JavaTimeDeserializer private constructor() : ContextualDeserializer, JsonD
         else -> throw UnsupportedOperationException("handledType=$targetClass, handledValue=$value")
       }
     }
+
+    fun instance(kClass: KClass<LocalDateTime>): JsonDeserializer<out LocalDateTime> {
+      TODO()
+    }
   }
 }
