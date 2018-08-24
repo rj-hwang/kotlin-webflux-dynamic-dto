@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.SerializationFeature
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.jayway.jsonpath.matchers.JsonPathMatchers.*
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.equalTo
@@ -31,7 +30,7 @@ class JacksonJavaTimeModuleTest {
   fun test() {
     // config
     val mapper = ObjectMapper()
-    mapper.registerModule(JavaTimeModule())
+    mapper.registerModule(com.fasterxml.jackson.datatype.jsr310.JavaTimeModule())
     mapper.setSerializationInclusion(NON_EMPTY) // not serialize null and empty value
     mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
     mapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)

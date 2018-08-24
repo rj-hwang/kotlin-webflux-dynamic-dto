@@ -1,47 +1,46 @@
 package com.rjhwang.kotlin.webflux.javatime
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY
-import com.fasterxml.jackson.core.Version
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.databind.SerializationFeature
 import com.jayway.jsonpath.matchers.JsonPathMatchers.*
 import com.rjhwang.kotlin.webflux.Dto
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.equalTo
 import org.junit.Assert.assertThat
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.time.MonthDay
-import java.time.OffsetDateTime
-import java.time.Year
-import java.time.YearMonth
+import java.time.*
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 /**
- * Test [JavaTimeSerializer].
- *
- * See [POJOs to JSON and back](https://github.com/FasterXML/jackson-databind/#1-minute-tutorial-pojos-to-json-and-back)
+ * Test [JavaTimeModule].
  *
  * @author RJ
  */
-class JavaTimeSerializeTest {
-  private val logger: Logger = LoggerFactory.getLogger(JavaTimeSerializeTest::class.java)
-  private val now = OffsetDateTime.now().truncatedTo(ChronoUnit.SECONDS)!!
-  private val nowStr = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))!!
+class JavaTimeModuleTest {
+  private val logger: Logger = LoggerFactory.getLogger(JavaTimeModuleTest::class.java)
+  private val now = OffsetDateTime.now().truncatedTo(ChronoUnit.MINUTES)!!
+  private val nowStr = now.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))!!
 
   @Test
   fun test() {
     // config
     val mapper = ObjectMapper()
-    val testModule = SimpleModule("MyModule", Version(1, 0, 0, null, null, null))
-    testModule.addSerializer(JavaTimeSerializer.INSTANCE)
-    mapper.registerModule(testModule)
+    mapper.registerModule(JavaTimeModule())
     mapper.setSerializationInclusion(NON_EMPTY) // not serialize null and empty value
+    mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+    mapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE)
+    mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    mapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true)
 
     // init data
-    val dto = Dto(
+    val expected = Dto(
       name = "",
       localDateTime = now.toLocalDateTime(),
       localDate = now.toLocalDate(),
@@ -58,7 +57,8 @@ class JavaTimeSerializeTest {
     )
 
     // do serialize
-    val json = mapper.writeValueAsString(dto)
+    val json = mapper.writeValueAsString(expected)
+    logger.debug("expected={}", expected)
     logger.debug("json={}", json)
 
     // verify serialize
@@ -77,5 +77,23 @@ class JavaTimeSerializeTest {
       withJsonPath("$.month", equalTo(now.monthValue)),
       withJsonPath("$.monthDay", equalTo(nowStr.substring(5, 10)))
     )))
+
+    // do deserialize
+    val actual = mapper.readValue(json, Dto::class.java)
+    logger.debug("actual={}", actual)
+
+    // verify deserialize
+    assertNull(actual.name)
+    assertEquals(now.toLocalDateTime(), actual.localDateTime)
+    assertEquals(now.toLocalDate(), actual.localDate)
+    assertEquals(now.toLocalTime(), actual.localTime)
+    assertEquals(now, actual.offsetDateTime)
+    assertEquals(now.toZonedDateTime().withZoneSameLocal(ZoneId.systemDefault()), actual.zonedDateTime)
+
+    assertEquals(now.toInstant(), actual.instant)
+    assertEquals(YearMonth.of(now.year, now.monthValue), actual.yearMonth)
+    assertEquals(Year.of(now.year), actual.year)
+    assertEquals(now.month, actual.month)
+    assertEquals(MonthDay.of(now.monthValue, now.dayOfMonth), actual.monthDay)
   }
 }

@@ -1,6 +1,6 @@
 package cn.gftaxi.webflux.dynamicdto
 
-import com.rjhwang.kotlin.webflux.dto1.Dto1
+import com.rjhwang.kotlin.webflux.Dto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType.APPLICATION_JSON_UTF8
 import org.springframework.stereotype.Component
@@ -15,8 +15,8 @@ import reactor.core.publisher.Mono
  * @author RJ
  */
 @Component
-class PatchDto1Handler @Autowired constructor() : HandlerFunction<ServerResponse> {
+class PatchHandler @Autowired constructor() : HandlerFunction<ServerResponse> {
   override fun handle(request: ServerRequest): Mono<ServerResponse> {
-    return request.bodyToMono<Dto1>().flatMap { ok().contentType(APPLICATION_JSON_UTF8).syncBody(it) }
+    return request.bodyToMono<Dto>().flatMap { ok().contentType(APPLICATION_JSON_UTF8).syncBody(it) }
   }
 }

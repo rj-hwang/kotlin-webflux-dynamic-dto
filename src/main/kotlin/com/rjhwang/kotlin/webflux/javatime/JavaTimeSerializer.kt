@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator
 import com.fasterxml.jackson.databind.BeanProperty
 import com.fasterxml.jackson.databind.JsonSerializer
 import com.fasterxml.jackson.databind.SerializerProvider
+import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.ser.ContextualSerializer
 import com.rjhwang.kotlin.webflux.javatime.JavaTimeUtils.getFormatter
 import org.slf4j.Logger
@@ -55,6 +56,10 @@ class JavaTimeSerializer private constructor() : ContextualSerializer, JsonSeria
       if (!CACHE_SERIALIZERS.containsKey(handledType))
         CACHE_SERIALIZERS[handledType] = JavaTimeSerializer(handledType)
       return CACHE_SERIALIZERS[handledType]!!
+    }
+
+    fun addAllSupportedSerializerToModule(module: SimpleModule) {
+      module.addSerializer(JavaTimeSerializer.INSTANCE)
     }
   }
 }

@@ -4,7 +4,8 @@ import com.fasterxml.jackson.core.Version
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.module.SimpleModule
-import com.rjhwang.kotlin.webflux.javatime.JavaTimeGenericDeserializer.Companion.addAllSupportedDeserializerToModule
+import com.rjhwang.kotlin.webflux.Dto
+import com.rjhwang.kotlin.webflux.javatime.JavaTimeDeserializer.Companion.addAllSupportedDeserializerToModule
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Test
@@ -15,16 +16,12 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 /**
- * See [POJOs to JSON and back](https://github.com/FasterXML/jackson-databind/#1-minute-tutorial-pojos-to-json-and-back)
+ * Test [JavaTimeDeserializer].
  *
  * @author RJ
  */
 class JavaTimeDeserializerTest {
   private val logger: Logger = LoggerFactory.getLogger(JavaTimeDeserializerTest::class.java)
-  @Test
-  fun test() {
-    println(201801.shr(2))
-  }
 
   @Test
   fun testDeserializer() {
